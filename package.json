@@ -1,0 +1,12 @@
+{
+  "name": "ai-photo-cleanup",
+  "version": "1.0.0",
+  "description": "AI-powered image cleanup tool using Gemini",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js"
+  },
+  "dependencies": {
+    "@google/generative-ai": "^0.1.0"
+  }
+}

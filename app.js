@@ -24,3 +24,15 @@ export async function processImage(base64Image) {
 
   return result.response.text();
 }
+async function sendToAI(base64Image) {
+  const response = await fetch("http://localhost:3000/process", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({ image: base64Image })
+  });
+
+  const data = await response.json();
+  console.log(data);
+}

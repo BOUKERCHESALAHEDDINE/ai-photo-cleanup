@@ -1,44 +1,29 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>AI Photo Cleanup</title>
-  <style>
-    body {
-      font-family: Arial;
-      text-align: center;
-      margin-top: 50px;
-    }
-    img {
-      max-width: 300px;
-      margin-top: 20px;
-    }
-  </style>
-</head>
-<body>
+<script>
+  const upload = document.getElementById("upload");
+  const preview = document.getElementById("preview");
 
-  <h1>AI Photo Cleanup</h1>
-  <p>Upload an image to analyze</p>
+  upload.addEventListener("change", () => {
+    const file = upload.files[0];
+    if (!file) return;
 
-  <input type="file" id="upload" accept="image/*" />
-  <br>
-  <img id="preview" />
+    const reader = new FileReader();
 
-  <script>
-    const upload = document.getElementById("upload");
-    const preview = document.getElementById("preview");
+    reader.onload = async () => {
+      const base64 = reader.result.split(",")[1];
+      preview.src = reader.result;
 
-    upload.addEventListener("change", () => {
-      const file = upload.files[0];
-      if (file) {
-        const reader = new FileReader();
-        reader.onload = () => {
-          preview.src = reader.result;
-        };
-        reader.readAsDataURL(file);
-      }
-    });
-  </script>
+      const response = await fetch("http://localhost:3000/process", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ image: base64 })
+      });
 
-</body>
-</html>
+      const data = await response.json();
+      alert("AI Response:\n" + data.output);
+    };
+
+    reader.readAsDataURL(file);
+  });
+</script>

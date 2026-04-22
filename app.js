@@ -1,26 +1,33 @@
 import { GoogleGenerativeAI } from "@google/generative-ai";
 
-const genAI = new GoogleGenerativeAI("YOUR_API_KEY");
+app.post("/process", async (req, res) => {
+  try {
+    const model = genAI.getGenerativeModel({
+      model: "gemini-1.5-pro"
+    });
 
-export async function processImage(base64Image) {
-  const model = genAI.getGenerativeModel({
-    model: "gemini-1.5-pro"
-  });
-
-  const result = await model.generateContent([
-    {
-      inlineData: {
-        mimeType: "image/jpeg",
-        data: base64Image,
+    const result = await model.generateContent([
+      {
+        inlineData: {
+          mimeType: "image/jpeg",
+          data: req.body.image
+        }
       },
-    },
-    {
-      text: `
-      Analyze the image and suggest regions for cleanup and reconstruction.
-      Return structured JSON with bounding boxes.
-      `,
-    },
-  ]);
+      {
+        text: "Describe what objects in this image could be removed."
+      }
+    ]);
+
+    const response = result.response;
+    const text = response.candidates?.[0]?.content?.parts?.[0]?.text || "No response";
+
+    res.json({ output: text });
+
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: error.message });
+  }
+});
 
   return result.response.text();
 }

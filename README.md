@@ -24,3 +24,8 @@ This project is intended for editing images you own or have permission to use.
 
 ## 👨‍💻 Author
 Salah Eddine
+## 🚀 Live Demo (Local)
+1. Run server: npm start
+2. Open index.html
+3. Upload image
+4. View AI analysis
